@@ -1,78 +1,4 @@
 <?php
-/*
-    Sample usage:
-        $curler = new Curler();
-        $curler->get('http://www.google.com/'); // passes
-
-        $curler = new Curler();
-        $curler->setMime('webpages');
-        $curler->get('http://www.google.com/'); // passes
-
-        $curler = new Curler();
-        $curler->setMime('text/html');
-        $curler->get('http://www.google.com/'); // passes
-
-        $curler = new Curler();
-        $curler->get('http://www.google.ca/intl/en/images/about_logo.gif'); // fails (default is to accept only webpage mime types)
-
-        $curler = new Curler();
-        $curler->setMime('images');
-        $curler->get('http://www.google.ca/intl/en/images/about_logo.gif'); // passes
-
-        $curler = new Curler();
-        $curler->setMime('gif');
-        $curler->get('http://www.google.ca/intl/en/images/about_logo.gif'); // passes
-
-        $curler = new Curler();
-        $curler->setMime('image/gif');
-        $curler->get('http://www.google.ca/intl/en/images/about_logo.gif'); // passes
-
-        $curler = new Curler();
-        $curler->setMime('image/jpeg');
-        $curler->get('http://www.google.ca/intl/en/images/about_logo.gif'); // fails
-
-        $curler = new Curler();
-        $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails, since response is image/javascript
-
-        $curler = new Curler();
-        $curler->setMime('image');
-        $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if javascript, passes otherwise
-
-        $curler = new Curler();
-        $curler->setMime('image/jpeg');
-        $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if javascript, passes otherwise
-
-        $curler = new Curler();
-        $curler->setMime('javascript');
-        $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if image, passes otherwise
-
-        $curler = new Curler();
-        $curler->setMime('text/javascript');
-        $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if image, passes otherwise
-
-        $curler = new Curler();
-        $curler->setMimes('image', 'javascript');
-        $curler->get('graph.facebook.com/oliver.nassar/picture'); // passes
-
-        $curler = new Curler();
-        $curler->setMime('all');
-        $curler->get('graph.facebook.com/oliver.nassar/picture'); // passes
-
-        ...
-
-        $curler = new Curler();
-        $curler->head('http://www.google.com/'); // passes
-
-        $curler = new Curler();
-        $curler->setMimes('image', 'javascript');
-        $curler->head('http://www.google.com/'); // fails
-
-        $curler = new Curler();
-        $curler->head('http://www.google.ca/intl/en/images/about_logo.gif'); // passes
-
-        $curler = new Curler();
-        $curler->head('graph.facebook.com/oliver.nassar/picture'); // passes
-*/
 
     // dependecy check
     if (!in_array('curl', get_loaded_extensions())) {
@@ -80,17 +6,97 @@
     }
 
     /**
-     * Curler class. Makes curl requests (either HEAD or GET) to a url/path
+     * Curler
      * 
-     * @todo support POST requests
-     * @note currently has features that limit requests if file size is too
-     *     large, or mime type isn't acceptable for the request
-     * @note GET's are setup to, by default, accept only webpage mime types;
-     *     HEAD's are setup to accept all, so you need to be specific if you
-     *     want a HEAD to fail (return `false`) for certain mime type checks
-     * @note all requests will fail/return `false` if a 404 is encoutered; the
-     *     response can still be accessed with the `getInfo` method, however
-     * @note if a response has no mime type, it will fail
+     * Makes curl requests (either HEAD or GET) to a URI.
+     * 
+     * @author  Oliver Nassar <onassar@gmail.com>
+     * @todo    support POST requests
+     * @notes   currently has features that limit requests if file size is too
+     *          large, or mime type isn't acceptable for the request
+     *          GET's are setup to, by default, accept only webpage mime types;
+     *          HEAD's are setup to accept all, so you need to be specific if you
+     *          want a HEAD to fail (return <false>) for certain mime type checks
+     *          all requests will fail/return <false> if a 404 is encoutered; the
+     *          response can still be accessed with the `getInfo` method, however
+     *          if a response has no mime type, it will fail
+     * @example
+     * <code>
+     *     // booting
+     *     require_once APP . '/vendors/PHP-Curler/Curler.class.php';
+     *     
+     *     // <GET> requests
+     *     $curler = (new Curler());
+     *     $curler->get('http://www.google.com/'); // passes
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMime('webpages');
+     *     $curler->get('http://www.google.com/'); // passes
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMime('text/html');
+     *     $curler->get('http://www.google.com/'); // passes
+     *     
+     *     $curler = (new Curler());
+     *     $curler->get('http://www.google.ca/intl/en/images/about_logo.gif'); // fails (default is to accept only webpage mime types)
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMime('images');
+     *     $curler->get('http://www.google.ca/intl/en/images/about_logo.gif'); // passes
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMime('gif');
+     *     $curler->get('http://www.google.ca/intl/en/images/about_logo.gif'); // passes
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMime('image/gif');
+     *     $curler->get('http://www.google.ca/intl/en/images/about_logo.gif'); // passes
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMime('image/jpeg');
+     *     $curler->get('http://www.google.ca/intl/en/images/about_logo.gif'); // fails
+     *     
+     *     $curler = (new Curler());
+     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails, since response is image/javascript
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMime('image');
+     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if javascript, passes otherwise
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMime('image/jpeg');
+     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if javascript, passes otherwise
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMime('javascript');
+     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if image, passes otherwise
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMime('text/javascript');
+     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if image, passes otherwise
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMimes('image', 'javascript');
+     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // passes
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMime('all');
+     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // passes
+     *     
+     *     // <POST> requests
+     *     $curler = (new Curler());
+     *     $curler->head('http://www.google.com/'); // passes
+     *     
+     *     $curler = (new Curler());
+     *     $curler->setMimes('image', 'javascript');
+     *     $curler->head('http://www.google.com/'); // fails
+     *     
+     *     $curler = (new Curler());
+     *     $curler->head('http://www.google.ca/intl/en/images/about_logo.gif'); // passes
+     *     
+     *     $curler = (new Curler());
+     *     $curler->head('graph.facebook.com/oliver.nassar/picture'); // passes
+     * </code>
      */
     class Curler
     {
@@ -571,7 +577,7 @@
             if (!$this->_valid()) {
 
                 /**
-                 * failed HEAD, so return `false` (info of the call and error
+                 * failed HEAD, so return <false> (info of the call and error
                  *     details still available through `$this->getInfo` and
                  *     `$this->getError`, respectively)
                  */
@@ -653,7 +659,7 @@
          * 
          * @note intrinsically, HEAD requests don't have a response, just the
          *     info from the server
-         * @note a HEAD request will still fail/return `false` if the mime type
+         * @note a HEAD request will still fail/return <false> if the mime type
          *     requirement isn't met
          * @access public
          * @param string $url the url to run the HEAD call again
@@ -813,5 +819,3 @@
             $this->setHeader('User-Agent', $str);
         }
     }
-
-?>
