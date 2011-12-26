@@ -57,31 +57,31 @@
      *     $curler->get('http://www.google.ca/intl/en/images/about_logo.gif'); // fails
      *     
      *     $curler = (new Curler());
-     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails, since response is image/javascript
+     *     $curler->get('https://graph.facebook.com/oliver.nassar/picture'); // fails, since response is image/javascript
      *     
      *     $curler = (new Curler());
      *     $curler->setMime('image');
-     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if javascript, passes otherwise
+     *     $curler->get('https://graph.facebook.com/oliver.nassar/picture'); // fails if javascript, passes otherwise
      *     
      *     $curler = (new Curler());
      *     $curler->setMime('image/jpeg');
-     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if javascript, passes otherwise
+     *     $curler->get('https://graph.facebook.com/oliver.nassar/picture'); // fails if javascript, passes otherwise
      *     
      *     $curler = (new Curler());
      *     $curler->setMime('javascript');
-     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if image, passes otherwise
+     *     $curler->get('https://graph.facebook.com/oliver.nassar/picture'); // fails if image, passes otherwise
      *     
      *     $curler = (new Curler());
      *     $curler->setMime('text/javascript');
-     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // fails if image, passes otherwise
+     *     $curler->get('https://graph.facebook.com/oliver.nassar/picture'); // fails if image, passes otherwise
      *     
      *     $curler = (new Curler());
      *     $curler->setMimes('image', 'javascript');
-     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // passes
+     *     $curler->get('https://graph.facebook.com/oliver.nassar/picture'); // passes
      *     
      *     $curler = (new Curler());
      *     $curler->setMime('all');
-     *     $curler->get('graph.facebook.com/oliver.nassar/picture'); // passes
+     *     $curler->get('https://graph.facebook.com/oliver.nassar/picture'); // passes
      *     
      *     // <POST> requests
      *     $curler = (new Curler());
@@ -101,85 +101,102 @@
     class Curler
     {
         /**
-         * _acceptable. Array of acceptable mime types that ought to result in a
-         *     successful curl
+         * _acceptable
          * 
-         * @var array
+         * Array of acceptable mime types that ought to result in a successful
+         * curl
+         * 
+         * @var    array
          * @access protected
          */
         protected $_acceptable;
 
         /**
-         * _auth. HTTP auth credentials
+         * _auth
          * 
-         * @var array
+         * HTTP auth credentials
+         * 
+         * @var    array
          * @access protected
          */
         protected $_auth;
 
         /**
-         * _cookie. Path to the cookie file that should be used for temporary
-         *     storage of cookies that are sent back by a curl
+         * _cookie
          * 
-         * @var string
+         * Path to the cookie file that should be used for temporary storage of
+         * cookies that are sent back by a curl
+         * 
+         * @var    string
          * @access protected
          */
         protected $_cookie;
 
         /**
-         * _death. When set to false, signifies that the curl should never die;
-         *     when set to an int (eg. 404), signifies the http status code that
-         *     should mark it to die
+         * _death
          * 
-         * @var false|int|array
+         * When set to false, signifies that the curl should never die; when set
+         * to an int (eg. 404), signifies the http status code that should mark
+         * it to die
+         * 
+         * @var    false|int|array
          * @access protected
          */
         protected $_death;
 
         /**
-         * _error. Array containing details of a possible error
+         * _error
          * 
-         * @var array
+         * Array containing details of a possible error
+         * 
+         * @var    array
          * @access protected
          */
         protected $_error;
 
         /**
-         * _headers. Array containing the request headers that will be sent with
-         *     the curl
+         * _headers
          * 
-         * @var array
+         * Array containing the request headers that will be sent with the curl
+         * 
+         * @var    array
          * @access protected
          */
         protected $_headers;
 
         /**
-         * _info. Storage of the info that was returned by the GET and HEAD
-         *     calls (since a GET is always preceeded by a HEAD)
+         * _info
          * 
-         * @var array
+         * Storage of the info that was returned by the GET and HEAD calls
+         * (since a GET is always preceeded by a HEAD)
+         * 
+         * @var    array
          * @access protected
          */
         protected $_info;
 
         /**
-         * _limit. The limit, in kilobytes, that the curler will grab. This is
-         *     determined by sending a HEAD request first
+         * _limit
+         * 
+         * The limit, in kilobytes, that the curler will grab. This is
+         * determined by sending a HEAD request first
          * 
          * (default value: 1024)
          * 
-         * @var int
+         * @var    int
          * @access protected
          */
         protected $_limit = 1024;
 
         /**
-         * _mimes. Mime type mappings, used to determine if requests should be
-         *     processed and/or returned
+         * _mimes
          * 
-         * @note can be modified if you want certain mime-types
-         *     (eg. application/whatever) to be 'categorized' in a certain way
-         * @var array
+         * Mime type mappings, used to determine if requests should be processed
+         * and/or returned
+         * 
+         * @notes  can be modified if you want certain mime-types (eg.
+         *         application/whatever) to be 'categorized' in a certain way
+         * @var    array
          * @access protected
          */
         protected $_mimes = array(
@@ -313,28 +330,32 @@
         );
 
         /**
-         * _timeout. Number of seconds to wait before timing out and failing
+         * _timeout
          * 
-         * @var int
+         * Number of seconds to wait before timing out and failing
+         * 
+         * @var    int
          * @access protected
          */
         protected $_timeout;
 
         /**
-         * _userAgent. The user agent that should be simulating the request
+         * _userAgent
          * 
-         * @var string
+         * The user agent that should be simulating the request
+         * 
+         * @var    string
          * @access protected
          */
         protected $_userAgent;
 
         /**
-         * __construct function.
+         * __construct
          * 
          * @access public
-         * @param int $death. (default: 404) HTTP code that should kill the
-         *     request (eg. don't return the response); if false, will continue
-         *     always
+         * @param  int $death. (default: 404) HTTP code that should kill the
+         *         request (eg. don't return the response); if false, will
+         *         continue always
          * @return void
          */
         public function __construct($death = 404)
@@ -368,10 +389,10 @@
         }
 
         /**
-         * _close function.
+         * _close
          * 
          * @access protected
-         * @param resource $resource
+         * @param  resource $resource
          * @return void
          */
         protected function _close($resource)
@@ -380,7 +401,9 @@
         }
 
         /**
-         * _getHeaders function. Parses and returns the headers for the curl request
+         * _getHeaders
+         * 
+         * Parses and returns the headers for the curl request
          * 
          * @access protected
          * @return array headers formatted to be correctly formed for an HTTP request
@@ -395,13 +418,14 @@
         }
 
         /**
-         * _getResource function. Creates a curl resource, set's it up, and
-         *     returns it's reference
+         * _getResource
+         * 
+         * Creates a curl resource, set's it up, and returns it's reference
          * 
          * @access protected
-         * @param string $url
-         * @param bool $head. (default: false) whether or not this is a HEAD
-         *     request, in which case no response-body is returned
+         * @param  string $url
+         * @param  bool $head. (default: false) whether or not this is a HEAD
+         *         request, in which case no response-body is returned
          * @return resource curl resource reference
          */
         protected function _getResource($url, $head = false)
@@ -449,7 +473,7 @@
         }
 
         /**
-         * _openCookie function.
+         * _openCookie
          * 
          * @access protected
          * @return void
@@ -482,8 +506,10 @@
         }
 
         /**
-         * _valid function. Ensures that a request is valid, based on the
-         *     http code, mime type and content length returned
+         * _valid
+         * 
+         * Ensures that a request is valid, based on the http code, mime type
+         * and content length returned
          * 
          * @access protected
          * @return bool whether or not the request is valid to be processed
@@ -536,11 +562,13 @@
         }
 
         /**
-         * addMime function. Adds a specific mime type to the acceptable range
-         *     for a return/response
+         * addMime
+         * 
+         * Adds a specific mime type to the acceptable range for a
+         * return/response
          * 
          * @access public
-         * @param string $mime
+         * @param  string $mime
          * @return void
          */
         public function addMime($mime)
@@ -549,8 +577,10 @@
         }
 
         /**
-         * addMimes function. Adds passed in mime types to the array tracking
-         *     which are acceptable to be returned
+         * addMimes
+         * 
+         * Adds passed in mime types to the array tracking which are acceptable
+         * to be returned
          * 
          * @access public
          * @return void
@@ -564,10 +594,10 @@
         }
 
         /**
-         * get function.
+         * get
          * 
          * @access public
-         * @param string $url
+         * @param  string $url
          * @return array|false
          */
         public function get($url)
@@ -578,8 +608,8 @@
 
                 /**
                  * failed HEAD, so return <false> (info of the call and error
-                 *     details still available through `$this->getInfo` and
-                 *     `$this->getError`, respectively)
+                 * details still available through `$this->getInfo` and
+                 * `$this->getError`, respectively)
                  */
                 return false;
             }
@@ -608,7 +638,9 @@
         }
 
         /**
-         * getError function. Get details on the error that occured
+         * getError
+         * 
+         * Get details on the error that occured
          * 
          * @access public
          * @return array
@@ -622,7 +654,9 @@
         }
 
         /**
-         * getInfo function. Grabs the previously store info for the curl call
+         * getInfo
+         * 
+         * Grabs the previously store info for the curl call
          * 
          * @access public
          * @return array
@@ -633,12 +667,13 @@
         }
 
         /**
-         * getMimes function. Maps the mime types specified and returns them for
-         *     the curl requests
+         * getMimes
+         * 
+         * Maps the mime types specified and returns them for the curl requests
          * 
          * @access public
          * @return array mime types formatted to the be correctly formed for an
-         *     HTTP request
+         *         HTTP request
          */
         public function getMimes()
         {
@@ -655,14 +690,16 @@
         }
 
         /**
-         * head function. Make a HEAD call to the passed in url
+         * head
          * 
-         * @note intrinsically, HEAD requests don't have a response, just the
-         *     info from the server
-         * @note a HEAD request will still fail/return <false> if the mime type
-         *     requirement isn't met
+         * Make a HEAD call to the passed in url
+         * 
+         * @notes  intrinsically, HEAD requests don't have a response, just the
+         *         info from the server
+         *         a HEAD request will still fail/return <false> if the mime
+         *         type requirement isn't met
          * @access public
-         * @param string $url the url to run the HEAD call again
+         * @param  string $url the url to run the HEAD call again
          * @return array
          */
         public function head($url)
@@ -694,7 +731,9 @@
         }
 
         /**
-         * reset function. Resets the curler to _construct phase for further use
+         * reset
+         * 
+         * Resets the curler to _construct phase for further use
          * 
          * @access public
          * @return void
@@ -705,11 +744,11 @@
         }
 
         /**
-         * setAuth function.
+         * setAuth
          * 
          * @access public
-         * @param string $username
-         * @param string $password
+         * @param  string $username
+         * @param  string $password
          * @return void
          */
         public function setAuth($username, $password)
@@ -721,13 +760,15 @@
         }
 
         /**
-         * setHeader function. Sets a header for the request being made
+         * setHeader
          * 
-         * @note note using `array_push` here since I want to be able to
-         *     overwrite specific headers (eg. mime type options)
+         * Sets a header for the request being made
+         * 
+         * @notes  note using `array_push` here since I want to be able to
+         *         overwrite specific headers (eg. mime type options)
          * @access public
-         * @param string $name
-         * @param string $value
+         * @param  string $name
+         * @param  string $value
          * @return void
          */
         public function setHeader($name, $value)
@@ -736,10 +777,12 @@
         }
 
         /**
-         * setHeaders function. Sets a group of headers at once, for the request
+         * setHeaders
+         * 
+         * Sets a group of headers at once, for the request
          * 
          * @access public
-         * @param array $headers
+         * @param  array $headers
          * @return void
          */
         public function setHeaders(array $headers)
@@ -750,11 +793,13 @@
         }
 
         /**
-         * setLimit function. Sets the maximum number of kilobytes that can be
-         *     downloaded/requested in a GET request
+         * setLimit
+         * 
+         * Sets the maximum number of kilobytes that can be downloaded/requested
+         * in a GET request
          * 
          * @access public
-         * @param int|float $kilobytes
+         * @param  int|float $kilobytes
          * @return void
          */
         public function setLimit($kilobytes)
@@ -763,11 +808,12 @@
         }
 
         /**
-         * setMime function. Set's the acceptable mime's for content type to a
-         *     specific one
+         * setMime
+         * 
+         * Sets the acceptable mime's for content type to a specific one
          * 
          * @access public
-         * @param string $mime
+         * @param  string $mime
          * @return void
          */
         public function setMime($mime)
@@ -776,12 +822,14 @@
         }
 
         /**
-         * setMimes function. Stores which mime types can be accepted in the
-         *     request
+         * setMimes
          * 
-         * @note if false specified (such as setMime(false) or setMimes(false)),
-         *     then no mimes are set as being allowed (eg. good for clearing out
-         *     any previously set acceptable mime-types)
+         * Stores which mime types can be accepted in the request
+         * 
+         * @notes  if false specified (such as setMime(false) or
+         *         setMimes(false)), then no mimes are set as being allowed (eg.
+         *         good for clearing out any previously set acceptable
+         *         mime-types)
          * @access public
          * @return void
          */
@@ -795,10 +843,10 @@
         }
 
         /**
-         * setTimeout function.
+         * setTimeout
          * 
          * @access public
-         * @param string $seconds
+         * @param  string $seconds
          * @return void
          */
         public function setTimeout($seconds)
@@ -807,10 +855,10 @@
         }
 
         /**
-         * setUserAgent function.
+         * setUserAgent
          * 
          * @access public
-         * @param string $str
+         * @param  string $str
          * @return void
          */
         public function setUserAgent($str)
