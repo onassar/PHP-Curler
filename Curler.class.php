@@ -18,7 +18,7 @@
      *          HEAD's are setup to accept all, so you need to be specific if you
      *          want a HEAD to fail (return <false>) for certain mime type checks
      *          all requests will fail/return <false> if a 404 is encoutered; the
-     *          response can still be accessed with the `getInfo` method, however
+     *          response can still be accessed with the <getInfo> method, however
      *          if a response has no mime type, it will fail
      * @example
      * <code>
@@ -104,7 +104,7 @@
          * _acceptable
          * 
          * Array of acceptable mime types that ought to result in a successful
-         * curl
+         * curl.
          * 
          * @var    array
          * @access protected
@@ -125,7 +125,7 @@
          * _cookie
          * 
          * Path to the cookie file that should be used for temporary storage of
-         * cookies that are sent back by a curl
+         * cookies that are sent back by a curl.
          * 
          * @var    string
          * @access protected
@@ -137,9 +137,9 @@
          * 
          * When set to false, signifies that the curl should never die; when set
          * to an int (eg. 404), signifies the http status code that should mark
-         * it to die
+         * it to die.
          * 
-         * @var    false|int|array
+         * @var    false|integer|array
          * @access protected
          */
         protected $_death;
@@ -147,7 +147,7 @@
         /**
          * _error
          * 
-         * Array containing details of a possible error
+         * Array containing details of a possible error.
          * 
          * @var    array
          * @access protected
@@ -157,7 +157,7 @@
         /**
          * _headers
          * 
-         * Array containing the request headers that will be sent with the curl
+         * Array containing the request headers that will be sent with the curl.
          * 
          * @var    array
          * @access protected
@@ -168,7 +168,7 @@
          * _info
          * 
          * Storage of the info that was returned by the GET and HEAD calls
-         * (since a GET is always preceeded by a HEAD)
+         * (since a GET is always preceeded by a HEAD).
          * 
          * @var    array
          * @access protected
@@ -179,11 +179,11 @@
          * _limit
          * 
          * The limit, in kilobytes, that the curler will grab. This is
-         * determined by sending a HEAD request first
+         * determined by sending a HEAD request first.
          * 
          * (default value: 1024)
          * 
-         * @var    int
+         * @var    integer
          * @access protected
          */
         protected $_limit = 1024;
@@ -192,7 +192,7 @@
          * _mimes
          * 
          * Mime type mappings, used to determine if requests should be processed
-         * and/or returned
+         * and/or returned.
          * 
          * @notes  can be modified if you want certain mime-types (eg.
          *         application/whatever) to be 'categorized' in a certain way
@@ -332,9 +332,9 @@
         /**
          * _timeout
          * 
-         * Number of seconds to wait before timing out and failing
+         * Number of seconds to wait before timing out and failing.
          * 
-         * @var    int
+         * @var    integer
          * @access protected
          */
         protected $_timeout;
@@ -342,7 +342,7 @@
         /**
          * _userAgent
          * 
-         * The user agent that should be simulating the request
+         * The user agent that should be simulating the request.
          * 
          * @var    string
          * @access protected
@@ -353,7 +353,7 @@
          * __construct
          * 
          * @access public
-         * @param  int $death. (default: 404) HTTP code that should kill the
+         * @param  integer $death. (default: 404) HTTP code that should kill the
          *         request (eg. don't return the response); if false, will
          *         continue always
          * @return void
@@ -403,7 +403,7 @@
         /**
          * _getHeaders
          * 
-         * Parses and returns the headers for the curl request
+         * Parses and returns the headers for the curl request.
          * 
          * @access protected
          * @return array headers formatted to be correctly formed for an HTTP request
@@ -420,11 +420,11 @@
         /**
          * _getResource
          * 
-         * Creates a curl resource, set's it up, and returns it's reference
+         * Creates a curl resource, set's it up, and returns it's reference.
          * 
          * @access protected
          * @param  string $url
-         * @param  bool $head. (default: false) whether or not this is a HEAD
+         * @param  boolean $head. (default: false) whether or not this is a HEAD
          *         request, in which case no response-body is returned
          * @return resource curl resource reference
          */
@@ -509,10 +509,10 @@
          * _valid
          * 
          * Ensures that a request is valid, based on the http code, mime type
-         * and content length returned
+         * and content length returned.
          * 
          * @access protected
-         * @return bool whether or not the request is valid to be processed
+         * @return boolean whether or not the request is valid to be processed
          */
         protected function _valid()
         {
@@ -532,9 +532,9 @@
             $mime = current($pieces);
             if (!in_array($mime, $mimes)) {
 
-                // make error, and return false (eg. `content_type` didn't
+                // make error, and return false (eg. <content_type> didn't
                 // match; info still available for usage via
-                // `$this->getInfo`)
+                // <$this->getInfo>)
                 $this->_error = array(
                     'message' => 'Mime-type requirement not met. Resource is ' .
                         current(explode(';', $this->_info['content_type'])) .
@@ -565,7 +565,7 @@
          * addMime
          * 
          * Adds a specific mime type to the acceptable range for a
-         * return/response
+         * return/response.
          * 
          * @access public
          * @param  string $mime
@@ -580,7 +580,7 @@
          * addMimes
          * 
          * Adds passed in mime types to the array tracking which are acceptable
-         * to be returned
+         * to be returned.
          * 
          * @access public
          * @return void
@@ -608,8 +608,8 @@
 
                 /**
                  * failed HEAD, so return <false> (info of the call and error
-                 * details still available through `$this->getInfo` and
-                 * `$this->getError`, respectively)
+                 * details still available through <$this->getInfo> and
+                 * <$this->getError>, respectively)
                  */
                 return false;
             }
@@ -640,7 +640,7 @@
         /**
          * getError
          * 
-         * Get details on the error that occured
+         * Get details on the error that occured.
          * 
          * @access public
          * @return array
@@ -656,7 +656,7 @@
         /**
          * getInfo
          * 
-         * Grabs the previously store info for the curl call
+         * Grabs the previously store info for the curl call.
          * 
          * @access public
          * @return array
@@ -669,7 +669,7 @@
         /**
          * getMimes
          * 
-         * Maps the mime types specified and returns them for the curl requests
+         * Maps the mime types specified and returns them for the curl requests.
          * 
          * @access public
          * @return array mime types formatted to the be correctly formed for an
@@ -692,7 +692,7 @@
         /**
          * head
          * 
-         * Make a HEAD call to the passed in url
+         * Make a HEAD call to the passed in url.
          * 
          * @notes  intrinsically, HEAD requests don't have a response, just the
          *         info from the server
@@ -733,7 +733,7 @@
         /**
          * reset
          * 
-         * Resets the curler to _construct phase for further use
+         * Resets the curler to _construct phase for further use.
          * 
          * @access public
          * @return void
@@ -762,9 +762,9 @@
         /**
          * setHeader
          * 
-         * Sets a header for the request being made
+         * Sets a header for the request being made.
          * 
-         * @notes  note using `array_push` here since I want to be able to
+         * @notes  note using <array_push> here since I want to be able to
          *         overwrite specific headers (eg. mime type options)
          * @access public
          * @param  string $name
@@ -779,7 +779,7 @@
         /**
          * setHeaders
          * 
-         * Sets a group of headers at once, for the request
+         * Sets a group of headers at once, for the request.
          * 
          * @access public
          * @param  array $headers
@@ -795,11 +795,11 @@
         /**
          * setLimit
          * 
-         * Sets the maximum number of kilobytes that can be downloaded/requested
+         * Sets the maximum number of kilobytes that can be downloaded/requested.
          * in a GET request
          * 
          * @access public
-         * @param  int|float $kilobytes
+         * @param  integer|float $kilobytes
          * @return void
          */
         public function setLimit($kilobytes)
@@ -810,7 +810,7 @@
         /**
          * setMime
          * 
-         * Sets the acceptable mime's for content type to a specific one
+         * Sets the acceptable mime's for content type to a specific one.
          * 
          * @access public
          * @param  string $mime
@@ -824,7 +824,7 @@
         /**
          * setMimes
          * 
-         * Stores which mime types can be accepted in the request
+         * Stores which mime types can be accepted in the request.
          * 
          * @notes  if false specified (such as setMime(false) or
          *         setMimes(false)), then no mimes are set as being allowed (eg.
