@@ -19,6 +19,9 @@ accessed through the **getInfo** method.
 
 ### Example Output of a URL
 
+``` php
+<?php
+
     // booting
     require_once APP . '/vendors/PHP-Curler/Curler.class.php';
     
@@ -26,6 +29,8 @@ accessed through the **getInfo** method.
     $curler = (new Curler());
     echo $curler->get('http://www.google.com/');
     exit(0);
+
+```
 
 The above example, quite simply, downloads the google.com source, and displays
 it. By default, every new **Curler** instance is configured to accept documents
