@@ -594,10 +594,59 @@
         }
 
         /**
+         * post
+         * 
+         * @access public
+         * @param  String $url
+         * @param  Array $array
+         * @return Array|false
+         */
+        public function post($url, array $data = array())
+        {
+            // execute HEAD call, and check if invalid
+            $this->head($url);
+            if (!$this->_valid()) {
+
+                /**
+                 * failed HEAD, so return <false> (info of the call and error
+                 * details still available through <$this->getInfo> and
+                 * <$this->getError>, respectively)
+                 */
+                return false;
+            }
+
+            // mime type setting
+            $this->setHeader('Accept', implode(',', $this->getMimes()));
+            $resource = $this->_getResource($url);
+
+            // set post-specific details
+            curl_setopt($resource, CURLOPT_POST, count($data));
+            curl_setopt($resource, CURLOPT_POSTFIELDS, http_build_query($data));
+
+            // make the GET call, storing the response; store the info
+            $response = curl_exec($resource);
+            $this->_info = curl_getinfo($resource);
+
+            // error founded
+            if (curl_errno($resource) !== '0') {
+                $this->_error = array(
+                    'code' => curl_errno($resource),
+                    'message' => curl_error($resource)
+                );
+            }
+
+            // close the resource
+            $this->_close($resource);
+
+            // give the response back :)
+            return $response;
+        }
+
+        /**
          * get
          * 
          * @access public
-         * @param  string $url
+         * @param  String $url
          * @return array|false
          */
         public function get($url)
