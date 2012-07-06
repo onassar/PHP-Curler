@@ -11,7 +11,6 @@
      * Makes curl requests (either HEAD or GET) to a URI.
      * 
      * @author  Oliver Nassar <onassar@gmail.com>
-     * @todo    support POST requests
      * @notes   currently has features that limit requests if file size is too
      *          large, or mime type isn't acceptable for the request
      *          GET's are setup to, by default, accept only webpage mime types;
