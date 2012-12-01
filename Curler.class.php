@@ -644,9 +644,12 @@
         /**
          * get
          * 
+         * Returns the actual content (string), or else false if the request
+         * failed.
+         * 
          * @access public
          * @param  String $url
-         * @return array|false
+         * @return String|false
          */
         public function get($url)
         {
