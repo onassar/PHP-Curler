@@ -84,17 +84,17 @@
      *     
      *     // <POST> requests
      *     $curler = (new Curler());
-     *     $curler->head('http://www.google.com/'); // passes
+     *     $curler->head('http://www.google.com/'); // passes (theoretically; head call will go through)
      *     
      *     $curler = (new Curler());
      *     $curler->setMimes('image', 'javascript');
-     *     $curler->head('http://www.google.com/'); // fails
+     *     $curler->head('http://www.google.com/'); // fails (theoretically; head call will go through)
      *     
      *     $curler = (new Curler());
-     *     $curler->head('http://www.google.ca/intl/en/images/about_logo.gif'); // passes
+     *     $curler->head('http://www.google.ca/intl/en/images/about_logo.gif'); // passes (theoretically; head call will go through)
      *     
      *     $curler = (new Curler());
-     *     $curler->head('graph.facebook.com/oliver.nassar/picture'); // passes
+     *     $curler->head('graph.facebook.com/oliver.nassar/picture'); // passes (theoretically; head call will go through)
      * </code>
      */
     class Curler
