@@ -121,6 +121,26 @@
         protected $_auth;
 
         /**
+         * _cache
+         * 
+         * @var    Array
+         * @access protected
+         */
+        protected $_cache = array(
+            'get' => array(),
+            'head' => array(),
+            'post' => array()
+        );
+
+        /**
+         * _cacheResponse
+         * 
+         * @var    Boolean (default: false)
+         * @access protected
+         */
+        protected $_cacheResponse = false;
+
+        /**
          * _cookie
          * 
          * Path to the cookie file that should be used for temporary storage of
@@ -352,15 +372,20 @@
          * __construct
          * 
          * @access public
-         * @param  integer $death. (default: 404) HTTP code that should kill the
+         * @param  Boolean $cacheResponse (default: false) Whether the request
+         *         response should be cached
+         * @param  Integer $death. (default: 404) HTTP code that should kill the
          *         request (eg. don't return the response); if false, will
          *         continue always
          * @return void
          */
-        public function __construct($death = 404)
+        public function __construct($cacheResponse = false, $death = 404)
         {
             // ensure no HTTP auth credentials are setup
             $this->_auth = array();
+
+            // 
+            $this->_cacheResponse = $cacheResponse;
 
             // set the death code (used for marking a 'failed' curl)
             $this->_death = $death;
@@ -422,10 +447,10 @@
          * Creates a curl resource, set's it up, and returns it's reference.
          * 
          * @access protected
-         * @param  string $url
-         * @param  boolean $head. (default: false) whether or not this is a HEAD
+         * @param  String $url
+         * @param  Boolean $head. (default: false) whether or not this is a HEAD
          *         request, in which case no response-body is returned
-         * @return resource curl resource reference
+         * @return Resource curl resource reference
          */
         protected function _getResource($url, $head = false)
         {
@@ -511,7 +536,7 @@
          * and content length returned.
          * 
          * @access protected
-         * @return boolean whether or not the request is valid to be processed
+         * @return Boolean whether or not the request is valid to be processed
          */
         protected function _valid()
         {
@@ -567,7 +592,7 @@
          * return/response.
          * 
          * @access public
-         * @param  string $mime
+         * @param  String $mime
          * @return void
          */
         public function addMime($mime)
@@ -602,6 +627,14 @@
          */
         public function post($url, array $data = array())
         {
+            // return cache, if found
+            if (
+                $this->_cacheResponse === true
+                && isset($this->_cache['post'][$url])
+            ) {
+                return $this->_cache['post'][$url];
+            }
+
             // execute HEAD call, and check if invalid
             $this->head($url);
             if (!$this->_valid()) {
@@ -653,6 +686,14 @@
          */
         public function get($url)
         {
+            // return cache, if found
+            if (
+                $this->_cacheResponse === true
+                && isset($this->_cache['get'][$url])
+            ) {
+                return $this->_cache['get'][$url];
+            }
+
             // execute HEAD call, and check if invalid
             $this->head($url);
             if (!$this->_valid()) {
@@ -755,6 +796,14 @@
          */
         public function head($url)
         {
+            // return cache, if found
+            if (
+                $this->_cacheResponse === true
+                && isset($this->_cache['head'][$url])
+            ) {
+                return $this->_cache['head'][$url];
+            }
+
             /**
              * accept all content (ignored by HEAD requests, just put in for
              *     clarity); grab the resource
