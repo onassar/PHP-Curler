@@ -121,26 +121,6 @@
         protected $_auth;
 
         /**
-         * _cache
-         * 
-         * @var    Array
-         * @access protected
-         */
-        protected $_cache = array(
-            'get' => array(),
-            'head' => array(),
-            'post' => array()
-        );
-
-        /**
-         * _cacheResponse
-         * 
-         * @var    Boolean (default: false)
-         * @access protected
-         */
-        protected $_cacheResponse = false;
-
-        /**
          * _cookie
          * 
          * Path to the cookie file that should be used for temporary storage of
@@ -349,6 +329,14 @@
         );
 
         /**
+         * _response
+         * 
+         * @var    String
+         * @access protected
+         */
+        protected $_response;
+
+        /**
          * _timeout
          * 
          * Number of seconds to wait before timing out and failing.
@@ -372,20 +360,15 @@
          * __construct
          * 
          * @access public
-         * @param  Boolean $cacheResponse (default: false) Whether the request
-         *         response should be cached
          * @param  Integer $death. (default: 404) HTTP code that should kill the
          *         request (eg. don't return the response); if false, will
          *         continue always
          * @return void
          */
-        public function __construct($cacheResponse = false, $death = 404)
+        public function __construct($death = 404)
         {
             // ensure no HTTP auth credentials are setup
             $this->_auth = array();
-
-            // 
-            $this->_cacheResponse = $cacheResponse;
 
             // set the death code (used for marking a 'failed' curl)
             $this->_death = $death;
@@ -627,14 +610,6 @@
          */
         public function post($url, array $data = array())
         {
-            // return cache, if found
-            if (
-                $this->_cacheResponse === true
-                && isset($this->_cache['post'][$url])
-            ) {
-                return $this->_cache['post'][$url];
-            }
-
             // execute HEAD call, and check if invalid
             $this->head($url);
             if (!$this->_valid()) {
@@ -656,7 +631,7 @@
             curl_setopt($resource, CURLOPT_POSTFIELDS, http_build_query($data));
 
             // make the GET call, storing the response; store the info
-            $response = curl_exec($resource);
+            $this->_response = curl_exec($resource);
             $this->_info = curl_getinfo($resource);
 
             // error founded
@@ -671,7 +646,7 @@
             $this->_close($resource);
 
             // give the response back :)
-            return $response;
+            return $this->_response;
         }
 
         /**
@@ -686,14 +661,6 @@
          */
         public function get($url)
         {
-            // return cache, if found
-            if (
-                $this->_cacheResponse === true
-                && isset($this->_cache['get'][$url])
-            ) {
-                return $this->_cache['get'][$url];
-            }
-
             // execute HEAD call, and check if invalid
             $this->head($url);
             if (!$this->_valid()) {
@@ -711,7 +678,7 @@
             $resource = $this->_getResource($url);
 
             // make the GET call, storing the response; store the info
-            $response = curl_exec($resource);
+            $this->_response = curl_exec($resource);
             $this->_info = curl_getinfo($resource);
 
             // error founded
@@ -726,7 +693,7 @@
             $this->_close($resource);
 
             // give the response back :)
-            return $response;
+            return $this->_response;
         }
 
         /**
@@ -748,7 +715,7 @@
         /**
          * getInfo
          * 
-         * Grabs the previously store info for the curl call.
+         * Grabs the previously stored info for the curl call.
          * 
          * @access public
          * @return array
@@ -796,17 +763,9 @@
          */
         public function head($url)
         {
-            // return cache, if found
-            if (
-                $this->_cacheResponse === true
-                && isset($this->_cache['head'][$url])
-            ) {
-                return $this->_cache['head'][$url];
-            }
-
             /**
-             * accept all content (ignored by HEAD requests, just put in for
-             *     clarity); grab the resource
+             * Accept all content (ignored by HEAD requests, just put in for
+             * clarity); grab the resource
              */
             $this->setHeader('Accept', '*/*');
             $resource = $this->_getResource($url, true);
@@ -828,6 +787,19 @@
 
             // return info (head-headers)
             return $this->_info;
+        }
+
+        /**
+         * getResponse
+         * 
+         * Grabs the previously stored response.
+         * 
+         * @access public
+         * @return String
+         */
+        public function getResponse()
+        {
+            return $this->_response;
         }
 
         /**
