@@ -513,6 +513,37 @@
         }
 
         /**
+         * _parseCharset
+         * 
+         * Requires $this->get to be called before being called.
+         * 
+         * @access protected
+         * @return String|false
+         */
+        protected function _parseCharset()
+        {
+            // check header
+            $info = $this->getInfo();
+            $contentType = $info['content_type'];
+            $pattern = '#charset=([a-zA-Z0-9-]+)#';
+            $matches = array();
+            preg_match($pattern, $contentType, $matches);
+            if (isset($matches[1])) {
+                return $matches[1];
+            }
+
+            // check meta tag
+            $response = $this->getResponse();
+            $pattern = '#<meta(?!\s*(?:name|value)\s*=)[^>]*?charset\s*=[\s"\']*([^\s"\'/>]*)#';
+            $matches = array();
+            preg_match($pattern, $response, $matches);
+            if (isset($matches[1])) {
+                return $matches[1];
+            }
+            return false;
+        }
+
+        /**
          * _valid
          * 
          * Ensures that a request is valid, based on the http code, mime type
@@ -702,7 +733,7 @@
          * Get details on the error that occured.
          * 
          * @access public
-         * @return array
+         * @return Array
          */
         public function getError()
         {
@@ -710,6 +741,21 @@
                 return array();
             }
             return $this->_error;
+        }
+
+        /**
+         * getCharset
+         * 
+         * @access public
+         * @return String|false
+         */
+        public function getCharset()
+        {
+            // ensure content exists to match against
+            if (is_null($this->_response)) {
+                throw new Exception('Call must be preceded by a <get> call');
+            }
+            return $this->_parseCharset();
         }
 
         /**
