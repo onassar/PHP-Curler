@@ -367,6 +367,7 @@
          */
         public function __construct($death = 404)
         {
+el('hmm');
             // ensure no HTTP auth credentials are setup
             $this->_auth = array();
 
@@ -513,37 +514,6 @@
         }
 
         /**
-         * _parseCharset
-         * 
-         * Requires $this->get to be called before being called.
-         * 
-         * @access protected
-         * @return String|false
-         */
-        protected function _parseCharset()
-        {
-            // check header
-            $info = $this->getInfo();
-            $contentType = $info['content_type'];
-            $pattern = '#charset=([a-zA-Z0-9-]+)#';
-            $matches = array();
-            preg_match($pattern, $contentType, $matches);
-            if (isset($matches[1])) {
-                return $matches[1];
-            }
-
-            // check meta tag
-            $response = $this->getResponse();
-            $pattern = '#<meta(?!\s*(?:name|value)\s*=)[^>]*?charset\s*=[\s"\']*([^\s"\'/>]*)#';
-            $matches = array();
-            preg_match($pattern, $response, $matches);
-            if (isset($matches[1])) {
-                return $matches[1];
-            }
-            return false;
-        }
-
-        /**
          * _valid
          * 
          * Ensures that a request is valid, based on the http code, mime type
@@ -632,55 +602,6 @@
         }
 
         /**
-         * post
-         * 
-         * @access public
-         * @param  String $url
-         * @param  Array $array
-         * @return Array|false
-         */
-        public function post($url, array $data = array())
-        {
-            // execute HEAD call, and check if invalid
-            $this->head($url);
-            if (!$this->_valid()) {
-
-                /**
-                 * failed HEAD, so return <false> (info of the call and error
-                 * details still available through <$this->getInfo> and
-                 * <$this->getError>, respectively)
-                 */
-                return false;
-            }
-
-            // mime type setting
-            $this->setHeader('Accept', implode(',', $this->getMimes()));
-            $resource = $this->_getResource($url);
-
-            // set post-specific details
-            curl_setopt($resource, CURLOPT_POST, count($data));
-            curl_setopt($resource, CURLOPT_POSTFIELDS, http_build_query($data));
-
-            // make the GET call, storing the response; store the info
-            $this->_response = curl_exec($resource);
-            $this->_info = curl_getinfo($resource);
-
-            // error founded
-            if (curl_errno($resource) !== '0') {
-                $this->_error = array(
-                    'code' => curl_errno($resource),
-                    'message' => curl_error($resource)
-                );
-            }
-
-            // close the resource
-            $this->_close($resource);
-
-            // give the response back :)
-            return $this->_response;
-        }
-
-        /**
          * get
          * 
          * Returns the actual content (string), or else false if the request
@@ -728,6 +649,45 @@
         }
 
         /**
+         * getCharset
+         * 
+         * Requires $this->get to be called before being called.
+         * 
+         * @access public
+         * @return String|false
+         */
+        public function getCharset()
+        {
+            $headerCharset = $this->getHeaderCharset();
+            if ($headerCharset !== false) {
+                return $headerCharset;
+            }
+            return $this->getContentCharset();
+        }
+
+        /**
+         * getContentCharset
+         * 
+         * @access public
+         * @return String|false
+         */
+        public function getContentCharset()
+        {
+            // dependency check
+            if (class_exists('MetaParser') === false) {
+                throw new Exception(
+                    '*MetaParser* class required. Please see ' .
+                    'https://github.com/onassar/PHP-MetaParser'
+                );
+            }
+
+            // instantiate parser to get access to content's provided charset
+            $info = $this->getInfo();
+            $parser = (new MetaParser($this->_response, $info['url']));
+            return $parser->getCharset();
+        }
+
+        /**
          * getError
          * 
          * Get details on the error that occured.
@@ -744,18 +704,22 @@
         }
 
         /**
-         * getCharset
+         * getHeaderCharset
          * 
          * @access public
          * @return String|false
          */
-        public function getCharset()
+        public function getHeaderCharset()
         {
-            // ensure content exists to match against
-            if (is_null($this->_response)) {
-                throw new Exception('Call must be preceded by a <get> call');
+            // check header
+            $info = $this->getInfo();
+            $contentType = $info['content_type'];
+            $pattern = '#charset=([a-zA-Z0-9-]+)#';
+            preg_match($pattern, $contentType, $matches);
+            if (isset($matches[1])) {
+                return array_pop($matches);
             }
-            return $this->_parseCharset();
+            return false;
         }
 
         /**
@@ -845,6 +809,55 @@
          */
         public function getResponse()
         {
+            return $this->_response;
+        }
+
+        /**
+         * post
+         * 
+         * @access public
+         * @param  String $url
+         * @param  Array $array
+         * @return Array|false
+         */
+        public function post($url, array $data = array())
+        {
+            // execute HEAD call, and check if invalid
+            $this->head($url);
+            if (!$this->_valid()) {
+
+                /**
+                 * failed HEAD, so return <false> (info of the call and error
+                 * details still available through <$this->getInfo> and
+                 * <$this->getError>, respectively)
+                 */
+                return false;
+            }
+
+            // mime type setting
+            $this->setHeader('Accept', implode(',', $this->getMimes()));
+            $resource = $this->_getResource($url);
+
+            // set post-specific details
+            curl_setopt($resource, CURLOPT_POST, count($data));
+            curl_setopt($resource, CURLOPT_POSTFIELDS, http_build_query($data));
+
+            // make the GET call, storing the response; store the info
+            $this->_response = curl_exec($resource);
+            $this->_info = curl_getinfo($resource);
+
+            // error founded
+            if (curl_errno($resource) !== '0') {
+                $this->_error = array(
+                    'code' => curl_errno($resource),
+                    'message' => curl_error($resource)
+                );
+            }
+
+            // close the resource
+            $this->_close($resource);
+
+            // give the response back :)
             return $this->_response;
         }
 
