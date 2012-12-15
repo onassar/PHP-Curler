@@ -367,7 +367,6 @@
          */
         public function __construct($death = 404)
         {
-el('hmm');
             // ensure no HTTP auth credentials are setup
             $this->_auth = array();
 
@@ -668,6 +667,10 @@ el('hmm');
         /**
          * getContentCharset
          * 
+         * @note   The `url` value being used from the curler info is valid to
+         *         use since it is the redirect url. For example, if a bit.ly
+         *         link is specified, the `url` value being used below is not
+         *         bit.ly, but rather whatever site it's being redirect to.
          * @access public
          * @return String|false
          */
