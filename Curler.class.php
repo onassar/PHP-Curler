@@ -720,7 +720,10 @@
             $pattern = '#charset=([a-zA-Z0-9-]+)#';
             preg_match($pattern, $contentType, $matches);
             if (isset($matches[1])) {
-                return array_pop($matches);
+                $charset = array_pop($matches);
+                $charset = trim($charset);
+                $charset = strtolower($charset);
+                return $charset;
             }
             return false;
         }
