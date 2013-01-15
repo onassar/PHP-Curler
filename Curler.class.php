@@ -164,6 +164,14 @@
         protected $_headers;
 
         /**
+         * _headInfo
+         * 
+         * @var    array
+         * @access protected
+         */
+        protected $_headInfo;
+
+        /**
          * _info
          * 
          * Storage of the info that was returned by the GET and HEAD calls
@@ -524,18 +532,18 @@
         protected function _valid()
         {
             // should be killed; die
-            if (in_array($this->_info['http_code'], (array) $this->_death)) {
+            if (in_array($this->_headInfo['http_code'], (array) $this->_death)) {
                 $this->_error = array(
-                    'message' => ($this->_info['http_code']) .
+                    'message' => ($this->_headInfo['http_code']) .
                         ' error while trying to retrieve ' .
-                        ($this->_info['url'])
+                        ($this->_headInfo['url'])
                 );
                 return false;
             }
 
             // check if mime type requirement met
             $mimes = $this->getMimes();
-            $pieces = explode(';', $this->_info['content_type']);
+            $pieces = explode(';', $this->_headInfo['content_type']);
             $mime = current($pieces);
             if (!in_array($mime, $mimes)) {
 
@@ -544,7 +552,7 @@
                 // <$this->getInfo>)
                 $this->_error = array(
                     'message' => 'Mime-type requirement not met. Resource is ' .
-                        current(explode(';', $this->_info['content_type'])) .
+                        current(explode(';', $this->_headInfo['content_type'])) .
                         '. You were hoping for one of: ' .
                         implode(', ', $this->getMimes()) . '.'
                 );
@@ -552,13 +560,13 @@
             }
 
             // greater than maximum allowed
-            if($this->_info['download_content_length'] > ($this->_limit * 1024)) {
+            if($this->_headInfo['download_content_length'] > ($this->_limit * 1024)) {
 
                 // make error, return false
                 $this->_error = array(
                     'message' => ('File size limit reached. Limit was set to ') .
                         ($this->_limit) . ('kb. ') . ('Resource is ') .
-                        round(($this->_info['download_content_length'] / 1024), 2) .
+                        round(($this->_headInfo['download_content_length'] / 1024), 2) .
                         ('kb.')
                 );
                 return false;
@@ -613,7 +621,9 @@
         public function get($url)
         {
             // execute HEAD call, and check if invalid
-            $this->head($url);
+            if (is_null($this->_headInfo)) {
+                $this->head($url);
+            }
             if (!$this->_valid()) {
 
                 /**
@@ -742,6 +752,17 @@
         }
 
         /**
+         * getHeadInfo
+         * 
+         * @access public
+         * @return array
+         */
+        public function getHeadInfo()
+        {
+            return $this->_headInfo;
+        }
+
+        /**
          * getMimes
          * 
          * Maps the mime types specified and returns them for the curl requests.
@@ -788,7 +809,7 @@
 
             // make the HEAD call; store the info
             curl_exec($resource);
-            $this->_info = curl_getinfo($resource);
+            $this->_headInfo = curl_getinfo($resource);
 
             // error founded
             if (curl_errno($resource) !== '0') {
@@ -802,7 +823,7 @@
             $this->_close($resource);
 
             // return info (head-headers)
-            return $this->_info;
+            return $this->_headInfo;
         }
 
         /**
