@@ -733,6 +733,9 @@
                 $charset = array_pop($matches);
                 $charset = trim($charset);
                 $charset = strtolower($charset);
+                if ($charset === 'utf8') {
+                    return 'utf-8';
+                }
                 return $charset;
             }
             return false;
