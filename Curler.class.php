@@ -8,7 +8,7 @@
     /**
      * Curler
      * 
-     * Makes curl requests (either HEAD or GET) to a URI.
+     * Makes curl requests (HEAD, GET and POST) to a URI.
      * 
      * @author  Oliver Nassar <onassar@gmail.com>
      * @notes   currently has features that limit requests if file size is too
