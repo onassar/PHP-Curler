@@ -1050,4 +1050,16 @@
             $this->_userAgent = $str;
             $this->setHeader('User-Agent', $str);
         }
+
+        /**
+         * setWriteCallback
+         * 
+         * @access public
+         * @param  Callback $callback
+         * @return void
+         */
+        public function setWriteCallback($callback)
+        {
+            curl_setopt($resource, CURLOPT_WRITEFUNCTION, $callback);
+        }
     }
