@@ -365,14 +365,6 @@
         protected $_userAgent;
 
         /**
-         * _validateCall
-         * 
-         * @var    boolean (default: true)
-         * @access protected
-         */
-        protected $_validateCall = true;
-
-        /**
          * __construct
          * 
          * @access public
@@ -628,19 +620,18 @@
          */
         public function get($url)
         {
-            if ($this->_validateCall === true) {
-                if (is_null($this->_headInfo)) {
-                    $this->head($url);
-                }
-                if (!$this->_valid()) {
+            // execute HEAD call, and check if invalid
+            if (is_null($this->_headInfo)) {
+                $this->head($url);
+            }
+            if (!$this->_valid()) {
 
-                    /**
-                     * failed HEAD, so return <false> (info of the call and error
-                     * details still available through <$this->getInfo> and
-                     * <$this->getError>, respectively)
-                     */
-                    return false;
-                }
+                /**
+                 * failed HEAD, so return <false> (info of the call and error
+                 * details still available through <$this->getInfo> and
+                 * <$this->getError>, respectively)
+                 */
+                return false;
             }
 
             // mime type setting
@@ -861,19 +852,16 @@
          */
         public function post($url, array $data = array())
         {
-            if ($this->_validateCall === true) {
-                if (is_null($this->_headInfo)) {
-                    $this->head($url);
-                }
-                if (!$this->_valid()) {
+            // execute HEAD call, and check if invalid
+            $this->head($url);
+            if (!$this->_valid()) {
 
-                    /**
-                     * failed HEAD, so return <false> (info of the call and error
-                     * details still available through <$this->getInfo> and
-                     * <$this->getError>, respectively)
-                     */
-                    return false;
-                }
+                /**
+                 * failed HEAD, so return <false> (info of the call and error
+                 * details still available through <$this->getInfo> and
+                 * <$this->getError>, respectively)
+                 */
+                return false;
             }
 
             // mime type setting
@@ -901,17 +889,6 @@
 
             // give the response back :)
             return $this->_response;
-        }
-
-        /**
-         * removeCallValidation
-         * 
-         * @access public
-         * @return void
-         */
-        public function removeCallValidation()
-        {
-            $this->_validateCall = false;
         }
 
         /**
