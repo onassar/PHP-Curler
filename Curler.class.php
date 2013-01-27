@@ -637,9 +637,11 @@
             // mime type setting
             $this->setHeader('Accept', implode(',', $this->getMimes()));
             $resource = $this->_getResource($url);
+            curl_setopt($resource, CURLOPT_WRITEFUNCTION, array($this, 'writeCallback'));
 
             // make the GET call, storing the response; store the info
-            $this->_response = curl_exec($resource);
+            curl_exec($resource);
+            $this->_response = $this->_dynamicResponse;
             $this->_info = curl_getinfo($resource);
 
             // error founded
@@ -1026,5 +1028,23 @@
         {
             $this->_userAgent = $str;
             $this->setHeader('User-Agent', $str);
+        }
+
+        /**
+         * writeCallback
+         * 
+         * @access public
+         * @param  Object $resource
+         * @param  string $data
+         * @return integer
+         */
+        public function writeCallback($resource, $data)
+        {
+            $this->_dynamicResponse .= $data;
+            $limit = $this->_limit * 1024;
+            if (strlen($this->_dynamicResponse) > $limit) {
+                throw new Exception('Exceeding size.');
+            }
+            return strlen($data);
         }
     }
