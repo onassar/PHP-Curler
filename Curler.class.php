@@ -469,7 +469,7 @@
             curl_setopt($resource, CURLOPT_COOKIEJAR, $this->_cookie);
 
             // time allowances
-            curl_setopt($resource, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($resource, CURLOPT_CONNECTTIMEOUT, $this->_timeout);
             curl_setopt($resource, CURLOPT_TIMEOUT, $this->_timeout);
 
             // https settings
