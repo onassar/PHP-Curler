@@ -850,9 +850,10 @@
          * @access public
          * @param  String $url
          * @param  Array $array
+         * @param  boolean $buildQuery (default: true)
          * @return Array|false
          */
-        public function post($url, array $data = array())
+        public function post($url, array $data = array(), $buildQuery = true)
         {
             // execute HEAD call, and check if invalid
             $this->head($url);
@@ -871,8 +872,16 @@
             $resource = $this->_getResource($url);
 
             // set post-specific details
-            curl_setopt($resource, CURLOPT_POST, count($data));
-            curl_setopt($resource, CURLOPT_POSTFIELDS, http_build_query($data));
+            curl_setopt($resource, CURLOPT_POST, true);
+            if ($buildQuery === true) {
+                curl_setopt(
+                    $resource,
+                    CURLOPT_POSTFIELDS,
+                    http_build_query($data)
+                );
+            } else {
+                curl_setopt($resource, CURLOPT_POSTFIELDS, $data);
+            }
 
             // make the GET call, storing the response; store the info
             $this->_response = curl_exec($resource);
