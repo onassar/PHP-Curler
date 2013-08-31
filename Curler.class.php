@@ -216,6 +216,11 @@
                 'json',
                 'text'
             ),
+            'application/rss+xml' => array(
+                'all',
+                'text',
+                'xml'
+            ),
             'application/x-javascript' => array(
                 'all',
                 'javascript',
