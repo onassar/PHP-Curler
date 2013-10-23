@@ -144,6 +144,14 @@
         protected $_death;
 
         /**
+         * _dynamicResponse
+         * 
+         * @var    string (default: '')
+         * @access protected
+         */
+        protected $_dynamicResponse = '';
+
+        /**
          * _error
          * 
          * Array containing details of a possible error.
