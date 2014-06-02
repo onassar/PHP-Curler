@@ -9,7 +9,8 @@
      * Curler
      * 
      * Makes Curl requests (HEAD, GET and POST) to a URI.
-     * 
+     *
+     * @link    https://github.com/onassar/PHP-Curler 
      * @author  Oliver Nassar <onassar@gmail.com>
      * @notes   currently has features that limit requests if file size is too
      *          large, or mime type isn't acceptable for the request
@@ -378,6 +379,17 @@
         protected $_userAgent;
 
         /**
+         * _curlOptions
+         *
+         * Pre-defined array of curl options you can overwrite:
+         * CURLOPT_SSL_VERIFYPEER, CURLOPT_SSL_VERIFYHOST, CURLOPT_FOLLOWLOCATION, CURLOPT_MAXREDIRS
+         *
+         * @var    array
+         * @access protected
+         */
+        protected $_curlOptions = [];
+
+        /**
          * __construct
          * 
          * @access public
@@ -414,6 +426,13 @@
                 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; ' .
                 'rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12'
             );
+
+            $this->setCurlOptions(array(
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => 1,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_MAXREDIRS => 10,
+            ));
         }
 
         /**
@@ -486,14 +505,14 @@
             curl_setopt($resource, CURLOPT_TIMEOUT, $this->_timeout);
 
             // https settings
-            curl_setopt($resource, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($resource, CURLOPT_SSL_VERIFYHOST, 1);
+            curl_setopt($resource, CURLOPT_SSL_VERIFYPEER, $this->_getCurlOption(CURLOPT_SSL_VERIFYPEER));
+            curl_setopt($resource, CURLOPT_SSL_VERIFYHOST, $this->_getCurlOption(CURLOPT_SSL_VERIFYHOST));
             curl_setopt($resource, CURLOPT_FRESH_CONNECT, true);
 
             // response, redirection, and HEAD request settings
             curl_setopt($resource, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($resource, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($resource, CURLOPT_MAXREDIRS, 10);
+            curl_setopt($resource, CURLOPT_FOLLOWLOCATION, $this->_getCurlOption(CURLOPT_FOLLOWLOCATION));
+            curl_setopt($resource, CURLOPT_MAXREDIRS, $this->_getCurlOption(CURLOPT_MAXREDIRS));
             curl_setopt($resource, CURLOPT_NOBODY, $head);
 
             // return resource reference (all set up and ready to go)
@@ -587,6 +606,32 @@
 
             // return as valid
             return true;
+        }
+
+        /**
+         * Get pre-defined curl option value
+         *
+         * @param int $option Curl option
+         * @return mixed Pre-defined value for this curl option
+         */
+        protected function _getCurlOption($option)
+        {
+            if (!isset($this->_curlOptions[$option])) {
+                throw new Exception("Curl option $option is empty. Use setCurlOptions");
+            }
+            return $this->_curlOptions[$option];
+        }
+
+        /**
+         * Set curl options
+         *
+         * @param array $options Associative array of curl options overwrite
+         */
+        public function setCurlOptions($options)
+        {
+            foreach ($options as $option => $value) {
+                $this->_curlOptions[$option] = $value;
+            }
         }
 
         /**
@@ -1050,6 +1095,15 @@
         {
             $this->_userAgent = $str;
             $this->setHeader('User-Agent', $str);
+        }
+
+        /**
+         * Set path to file for curl to store cookies. File must be writable
+         * @param string $cookie
+         */
+        public function setCookieFile($cookie)
+        {
+            $this->_cookie = $cookie;
         }
 
         /**
