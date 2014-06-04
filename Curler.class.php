@@ -381,13 +381,12 @@
         /**
          * _curlOptions
          *
-         * Pre-defined array of curl options you can overwrite:
-         * CURLOPT_SSL_VERIFYPEER, CURLOPT_SSL_VERIFYHOST, CURLOPT_FOLLOWLOCATION, CURLOPT_MAXREDIRS
+         * Array of curl options
          *
          * @var    array
          * @access protected
          */
-        protected $_curlOptions = [];
+        protected $_curlOptions = array();
 
         /**
          * __construct
@@ -427,11 +426,12 @@
                 'rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12'
             );
 
+            // Set default curl options
             $this->setCurlOptions(array(
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_SSL_VERIFYHOST => 1,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_MAXREDIRS => 10,
+                'CURLOPT_SSL_VERIFYPEER' => false,
+                'CURLOPT_SSL_VERIFYHOST' => 1,
+                'CURLOPT_FOLLOWLOCATION' => true,
+                'CURLOPT_MAXREDIRS' => 10,
             ));
         }
 
@@ -445,6 +445,25 @@
         protected function _close($resource)
         {
             curl_close($resource);
+        }
+
+        /**
+         * _getCurlOption
+         * 
+         * Returns a pre-defined curl option value
+         *
+         * @access protected
+         * @param  string $option
+         * @return mixed
+         */
+        protected function _getCurlOption($option)
+        {
+            if (!isset($this->_curlOptions[$option])) {
+                throw new Exception(
+                    'Curl option ' . ($option) .' is empty. Use setCurlOptions'
+                );
+            }
+            return $this->_curlOptions[$option];
         }
 
         /**
@@ -492,7 +511,8 @@
                 curl_setopt(
                     $resource,
                     CURLOPT_USERPWD,
-                    ($this->_auth['username']) . ':' . ($this->_auth['password'])
+                    ($this->_auth['username']) . ':' .
+                        ($this->_auth['password'])
                 );
             }
 
@@ -505,14 +525,30 @@
             curl_setopt($resource, CURLOPT_TIMEOUT, $this->_timeout);
 
             // https settings
-            curl_setopt($resource, CURLOPT_SSL_VERIFYPEER, $this->_getCurlOption(CURLOPT_SSL_VERIFYPEER));
-            curl_setopt($resource, CURLOPT_SSL_VERIFYHOST, $this->_getCurlOption(CURLOPT_SSL_VERIFYHOST));
+            curl_setopt(
+                $resource,
+                CURLOPT_SSL_VERIFYPEER,
+                $this->_getCurlOption('CURLOPT_SSL_VERIFYPEER')
+            );
+            curl_setopt(
+                $resource,
+                CURLOPT_SSL_VERIFYHOST,
+                $this->_getCurlOption('CURLOPT_SSL_VERIFYHOST')
+            );
             curl_setopt($resource, CURLOPT_FRESH_CONNECT, true);
 
             // response, redirection, and HEAD request settings
             curl_setopt($resource, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($resource, CURLOPT_FOLLOWLOCATION, $this->_getCurlOption(CURLOPT_FOLLOWLOCATION));
-            curl_setopt($resource, CURLOPT_MAXREDIRS, $this->_getCurlOption(CURLOPT_MAXREDIRS));
+            curl_setopt(
+                $resource,
+                CURLOPT_FOLLOWLOCATION,
+                $this->_getCurlOption('CURLOPT_FOLLOWLOCATION')
+            );
+            curl_setopt(
+                $resource,
+                CURLOPT_MAXREDIRS,
+                $this->_getCurlOption('CURLOPT_MAXREDIRS')
+            );
             curl_setopt($resource, CURLOPT_NOBODY, $head);
 
             // return resource reference (all set up and ready to go)
@@ -606,32 +642,6 @@
 
             // return as valid
             return true;
-        }
-
-        /**
-         * Get pre-defined curl option value
-         *
-         * @param int $option Curl option
-         * @return mixed Pre-defined value for this curl option
-         */
-        protected function _getCurlOption($option)
-        {
-            if (!isset($this->_curlOptions[$option])) {
-                throw new Exception("Curl option $option is empty. Use setCurlOptions");
-            }
-            return $this->_curlOptions[$option];
-        }
-
-        /**
-         * Set curl options
-         *
-         * @param array $options Associative array of curl options overwrite
-         */
-        public function setCurlOptions($options)
-        {
-            foreach ($options as $option => $value) {
-                $this->_curlOptions[$option] = $value;
-            }
         }
 
         /**
@@ -987,6 +997,22 @@
                 'username' => $username,
                 'password' => $password
             );
+        }
+
+        /**
+         * setCurlOptions
+         * 
+         * Set curl options
+         *
+         * @access public
+         * @param  array $options Associative array of curl options
+         * @return void
+         */
+        public function setCurlOptions(array $options)
+        {
+            foreach ($options as $option => $value) {
+                $this->_curlOptions[$option] = $value;
+            }
         }
 
         /**
