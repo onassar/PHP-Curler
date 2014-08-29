@@ -429,7 +429,7 @@
             // Set default curl options
             $this->setCurlOptions(array(
                 'CURLOPT_SSL_VERIFYPEER' => false,
-                'CURLOPT_SSL_VERIFYHOST' => 1,
+                'CURLOPT_SSL_VERIFYHOST' => 2,
                 'CURLOPT_FOLLOWLOCATION' => true,
                 'CURLOPT_MAXREDIRS' => 10,
             ));
