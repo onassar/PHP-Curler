@@ -1150,3 +1150,4 @@
             return strlen($data);
         }
     }
+
