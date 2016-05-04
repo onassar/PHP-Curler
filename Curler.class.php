@@ -194,15 +194,13 @@
         /**
          * _limit
          * 
-         * The limit, in kilobytes, that the curler will grab. This is
-         * determined by sending a HEAD request first.
+         * The limit in bytes that the curler will grab. This is determined by
+         * sending a HEAD request first.
          * 
-         * (default value: 1024)
-         * 
-         * @var    integer
+         * @var    integer (default: 1048576) aka. 1mb
          * @access protected
          */
-        protected $_limit = 1024;
+        protected $_limit = 1048576;
 
         /**
          * _mimes
@@ -628,14 +626,13 @@
             }
 
             // greater than maximum allowed
-            if($this->_headInfo['download_content_length'] > ($this->_limit * 1024)) {
+            if($this->_headInfo['download_content_length'] > ($this->_limit)) {
 
                 // make error, return false
                 $this->_error = array(
                     'message' => ('File size limit reached. Limit was set to ') .
-                        ($this->_limit) . ('kb. ') . ('Resource is ') .
-                        round(($this->_headInfo['download_content_length'] / 1024), 2) .
-                        ('kb.')
+                        ($this->_limit) . '. Resource is ' .
+                        ($this->_headInfo['download_content_length'])
                 );
                 return false;
             }
@@ -1051,16 +1048,16 @@
         /**
          * setLimit
          * 
-         * Sets the maximum number of kilobytes that can be downloaded/requested.
+         * Sets the maximum number of bytes that can be downloaded / requested
          * in a GET request
          * 
          * @access public
-         * @param  integer|float $kilobytes
+         * @param  integer|float $bytes
          * @return void
          */
-        public function setLimit($kilobytes)
+        public function setLimit($bytes)
         {
-            $this->_limit = $kilobytes;
+            $this->_limit = $bytes;
         }
 
         /**
@@ -1143,8 +1140,7 @@
         public function writeCallback($resource, $data)
         {
             $this->_dynamicResponse .= $data;
-            $limit = $this->_limit * 1024;
-            if (strlen($this->_dynamicResponse) > $limit) {
+            if (strlen($this->_dynamicResponse) > $this->_limit) {
                 throw new Exception('Exceeding size.');
             }
             return strlen($data);
