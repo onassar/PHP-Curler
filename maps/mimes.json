@@ -1,0 +1,122 @@
+{
+    "application/json": [
+        "all",
+        "javascript",
+        "js",
+        "json",
+        "text"
+    ],
+    "application/rss+xml": [
+        "all",
+        "text",
+        "xml"
+    ],
+    "application/x-javascript": [
+        "all",
+        "javascript",
+        "js",
+        "text"
+    ],
+    "application/xhtml+xml": [
+        "all",
+        "text",
+        "webpage",
+        "webpages",
+        "xhtml",
+        "xml"
+    ],
+    "application/xml": [
+        "all",
+        "text",
+        "xml"
+    ],
+    "image/bmp": [
+        "all",
+        "bmp",
+        "image",
+        "images"
+    ],
+    "image/gif": [
+        "all",
+        "gif",
+        "image",
+        "images"
+    ],
+    "image/jpeg": [
+        "all",
+        "image",
+        "images",
+        "jpeg",
+        "jpg"
+    ],
+    "image/jpg": [
+        "all",
+        "image",
+        "images",
+        "jpeg",
+        "jpg"
+    ],
+    "image/pjpeg": [
+        "all",
+        "image",
+        "images",
+        "jpeg",
+        "jpg"
+    ],
+    "image/png": [
+        "all",
+        "image",
+        "images",
+        "png"
+    ],
+    "image/vnd.microsoft.icon": [
+        "all",
+        "image",
+        "images"
+    ],
+    "image/x-icon": [
+        "all",
+        "image",
+        "images"
+    ],
+    "image/x-bitmap": [
+        "all",
+        "image",
+        "images"
+    ],
+    "text/css": [
+        "all",
+        "css",
+        "text"
+    ],
+    "text/html": [
+        "all",
+        "html",
+        "text",
+        "webpage",
+        "webpages"
+    ],
+    "text/javascript": [
+        "all",
+        "javascript",
+        "js",
+        "text"
+    ],
+    "text/plain": [
+        "all",
+        "text"
+    ],
+    "text/x-javascript": [
+        "all",
+        "javascript",
+        "js",
+        "text"
+    ],
+    "text/x-json": [
+        "all",
+        "javascript",
+        "js",
+        "json",
+        "text"
+    ]
+}
