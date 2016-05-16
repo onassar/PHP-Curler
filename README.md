@@ -8,10 +8,8 @@ on it&#039;s meta details (eg. how big the document is, what mime types it
 claims itself as), proceed with the requests.
 
 Whether or not a url is accepted can be controlled through the following methods
- - **setLimit** set the file size limit of the document
  - **setMime** set the acceptable mime type
  - **setMimes** set the acceptable mime types
- - **setTimeout** set the allowable duration for a document to respond
 
 Information about a curl request&#039;s error can be accessed through the
 **getErrors** method. Additionally, raw information about the request can be
@@ -26,7 +24,7 @@ accessed through the **getInfo** method.
     require_once APP . '/vendors/PHP-Curler/Curler.class.php';
     
     // grab google.com contents and display
-    $curler = (new Curler());
+    $curler = new Curler();
     echo $curler->get('http://www.google.com/');
     exit(0);
 
