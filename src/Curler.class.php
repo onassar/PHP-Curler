@@ -644,7 +644,10 @@
         /**
          * head
          * 
-         * Make a HEAD call to the passed in URI.
+         * Make a HEAD call to the passed in URI. Note that this call can fail
+         * in two ways:
+         * 1. Timeout is reached
+         * 2. Max redirects is reached
          * 
          * @access public
          * @param  string $uri
