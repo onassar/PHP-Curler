@@ -841,7 +841,7 @@
          * @access public
          * @param  Object $resource
          * @param  string $data
-         * @return int
+         * @return integer
          */
         public function writeCallback($resource, $data)
         {
