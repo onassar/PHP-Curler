@@ -1,7 +1,7 @@
 <?php
 
     // dependecy check
-    if (!in_array('curl', get_loaded_extensions())) {
+    if (in_array('curl', get_loaded_extensions()) === false) {
         throw new Exception('cURL extension needs to be installed.');
     }
 
@@ -21,8 +21,8 @@
          * Array of acceptable mime types that ought to result in a successful
          * cURL request.
          * 
-         * @var    array (default: array())
-         * @access protected
+         * @var     array (default: array())
+         * @access  protected
          */
         protected $_acceptableMimeTypes = array();
 
@@ -33,16 +33,16 @@
          * cookies that are sent back by a curl. This is only used to ensure
          * servers that require cookie saving to properly respond to a request.
          * 
-         * @var    false|string (default: false)
-         * @access protected
+         * @var     false|string (default: false)
+         * @access  protected
          */
         protected $_cookieStoragePath = false;
 
         /**
          * _curlErrors
          * 
-         * @var    array (default: array())
-         * @access protected
+         * @var     array (default: array())
+         * @access  protected
          */
         protected $_curlErrors = array();
 
@@ -52,8 +52,8 @@
          * Variable used to store content during a get request to ensure
          * filesize limits aren't reached.
          * 
-         * @var    string (default: '')
-         * @access protected
+         * @var     string (default: '')
+         * @access  protected
          */
         protected $_dynamicResponse = '';
 
@@ -62,8 +62,8 @@
          * 
          * Array containing details of a possible error.
          * 
-         * @var    false|array (default: false)
-         * @access protected
+         * @var     false|array (default: false)
+         * @access  protected
          */
         protected $_error = false;
 
@@ -72,16 +72,16 @@
          * 
          * Array containing the request headers that will be sent with the curl.
          * 
-         * @var    array (default: array())
-         * @access protected
+         * @var     array (default: array())
+         * @access  protected
          */
         protected $_headers = array();
 
         /**
          * _headInfo
          * 
-         * @var    array
-         * @access protected
+         * @var     array
+         * @access  protected
          */
         protected $_headInfo;
 
@@ -91,24 +91,24 @@
          * Storage of the info that was returned by the GET and HEAD calls
          * (since a GET is always preceeded by a HEAD).
          * 
-         * @var    array
-         * @access protected
+         * @var     array
+         * @access  protected
          */
         protected $_info;
 
         /**
          * _mimes
          * 
-         * @var    array (default: array())
-         * @access protected
+         * @var     array (default: array())
+         * @access  protected
          */
         protected $_mimes = array();
 
         /**
          * _options
          * 
-         * @var    array
-         * @access protected
+         * @var     array
+         * @access  protected
          */
         protected $_options = array(
             'authCredentials' => array(),
@@ -123,8 +123,8 @@
         /**
          * _response
          * 
-         * @var    String
-         * @access protected
+         * @var     String
+         * @access  protected
          */
         protected $_response;
 
@@ -133,19 +133,19 @@
          *
          * Array of curl options
          *
-         * @var    array
-         * @access protected
+         * @var     array
+         * @access  protected
          */
         protected $_curlOptions = array();
 
         /**
          * __construct
          * 
-         * @access public
-         * @param  array $options (default: array())
-         * @return void
+         * @access  public
+         * @param   array $options (default: array())
+         * @return  void
          */
-        public function __construct($options = array())
+        public function __construct(array $options = array())
         {
             // Cookie path
             $info = pathinfo(__DIR__);
@@ -173,9 +173,9 @@
         /**
          * _close
          * 
-         * @access protected
-         * @param  resource $resource
-         * @return void
+         * @access  protected
+         * @param   resource $resource
+         * @return  void
          */
         protected function _close($resource)
         {
@@ -187,8 +187,8 @@
          * 
          * Parses and returns the headers for the curl request.
          * 
-         * @access protected
-         * @return array headers formatted to be correctly formed for an HTTP request
+         * @access  protected
+         * @return  array headers formatted to be correctly formed for an HTTP request
          */
         protected function _getHeaders()
         {
@@ -204,11 +204,11 @@
          * 
          * Creates a curl resource, set's it up, and returns it's reference.
          * 
-         * @access protected
-         * @param  string $url
-         * @param  boolean $head. (default: false) whether or not this is a HEAD
+         * @access  protected
+         * @param   string $url
+         * @param   boolean $head. (default: false) whether or not this is a HEAD
          *         request, in which case no response-body is returned
-         * @return Resource curl resource reference
+         * @return  Resource curl resource reference
          */
         protected function _getResource($url, $head = false)
         {
@@ -282,8 +282,8 @@
         /**
          * _loadCurlErrorMap
          * 
-         * @access protected
-         * @return void
+         * @access  protected
+         * @return  void
          */
         protected function _loadCurlErrorMap()
         {
@@ -297,8 +297,8 @@
         /**
          * _loadMimeMap
          * 
-         * @access protected
-         * @return void
+         * @access  protected
+         * @return  void
          */
         protected function _loadMimeMap()
         {
@@ -317,8 +317,8 @@
          * cookie file is writable. If it's the second case, and it passes, then
          * a cookie file is written to the proper path.
          * 
-         * @access protected
-         * @return void
+         * @access  protected
+         * @return  void
          */
         protected function _openCookie()
         {
@@ -353,8 +353,8 @@
          * Ensures that a request is valid, based on the http code, mime type
          * and content length returned.
          * 
-         * @access protected
-         * @return Boolean whether or not the request is valid to be processed
+         * @access  protected
+         * @return  Boolean whether or not the request is valid to be processed
          */
         protected function _valid()
         {
@@ -398,7 +398,7 @@
              */
             $maxFilesize = (int) $this->_options['maxFilesize'];
             $contentLength = (int) $this->_headInfo['download_content_length'];
-            if($contentLength > $maxFilesize) {
+            if ($contentLength > $maxFilesize) {
                 $this->_error = array(
                     'code' => 'CUSTOM_FILESIZE',
                     'message' => 'File size limit reached. Limit was set to ' .
@@ -417,9 +417,9 @@
          * Adds a specific mime type to the acceptable range for a
          * return/response.
          * 
-         * @access public
-         * @param  string $mime
-         * @return void
+         * @access  public
+         * @param   string $mime
+         * @return  void
          */
         public function addMime($mime)
         {
@@ -432,8 +432,8 @@
          * Adds passed in mime types to the array tracking which are acceptable
          * to be returned.
          * 
-         * @access public
-         * @return void
+         * @access  public
+         * @return  void
          */
         public function addMimes()
         {
@@ -449,9 +449,9 @@
          * Returns the actual content (string), or else false if the request
          * failed.
          * 
-         * @access public
-         * @param  string $url
-         * @return string|false
+         * @access  public
+         * @param   string $url
+         * @return  string|false
          */
         public function get($url)
         {
@@ -519,8 +519,8 @@
          * 
          * Requires $this->get to be called before being called.
          * 
-         * @access public
-         * @return string|false
+         * @access  public
+         * @return  string|false
          */
         public function getCharset()
         {
@@ -534,12 +534,12 @@
         /**
          * getContentCharset
          * 
-         * @note   The `url` value being used from the curler info is valid to
-         *         use since it is the redirect url. For example, if a bit.ly
-         *         link is specified, the `url` value being used below is not
-         *         bit.ly, but rather whatever site it's being redirect to.
-         * @access public
-         * @return string|false
+         * @note    The `url` value being used from the curler info is valid to
+         *          use since it is the redirect url. For example, if a bit.ly
+         *          link is specified, the `url` value being used below is not
+         *          bit.ly, but rather whatever site it's being redirect to.
+         * @access  public
+         * @return  string|false
          */
         public function getContentCharset()
         {
@@ -560,8 +560,8 @@
         /**
          * getError
          * 
-         * @access public
-         * @return false|array
+         * @access  public
+         * @return  false|array
          */
         public function getError()
         {
@@ -571,8 +571,8 @@
         /**
          * getHeaderCharset
          * 
-         * @access public
-         * @return string|false
+         * @access  public
+         * @return  string|false
          */
         public function getHeaderCharset()
         {
@@ -597,8 +597,8 @@
          * 
          * Grabs the previously stored info for the curl call.
          * 
-         * @access public
-         * @return array
+         * @access  public
+         * @return  array
          */
         public function getInfo()
         {
@@ -608,8 +608,8 @@
         /**
          * getHeadInfo
          * 
-         * @access public
-         * @return array
+         * @access  public
+         * @return  array
          */
         public function getHeadInfo()
         {
@@ -621,8 +621,8 @@
          * 
          * Maps the mime types specified and returns them for the curl requests.
          * 
-         * @access public
-         * @return array mime
+         * @access  public
+         * @return  array mime
          */
         public function getMimes()
         {
@@ -649,9 +649,9 @@
          * 1. Timeout is reached
          * 2. Max redirects is reached
          * 
-         * @access public
-         * @param  string $uri
-         * @return void
+         * @access  public
+         * @param   string $uri
+         * @return  void
          */
         public function head($uri)
         {
@@ -674,8 +674,8 @@
          * 
          * Grabs the previously stored response.
          * 
-         * @access public
-         * @return string
+         * @access  public
+         * @return  string
          */
         public function getResponse()
         {
@@ -685,11 +685,11 @@
         /**
          * post
          * 
-         * @access public
-         * @param  string $url
-         * @param  array $array
-         * @param  boolean $buildQuery (default: true)
-         * @return array|false
+         * @access  public
+         * @param   string $url
+         * @param   array $array
+         * @param   boolean $buildQuery (default: true)
+         * @return  array|false
          */
         public function post($url, array $data = array(), $buildQuery = true)
         {
@@ -741,9 +741,9 @@
         /**
          * setCurlOptions
          *
-         * @access public
-         * @param  array $options
-         * @return void
+         * @access  public
+         * @param   array $options
+         * @return  void
          */
         public function setCurlOptions(array $options)
         {
@@ -757,10 +757,10 @@
          * 
          * Sets a header for the request being made.
          * 
-         * @access public
-         * @param  string $key
-         * @param  string $value
-         * @return void
+         * @access  public
+         * @param   string $key
+         * @param   string $value
+         * @return  void
          */
         public function setHeader($key, $value)
         {
@@ -772,9 +772,9 @@
          * 
          * Sets a group of headers at once, for the request.
          * 
-         * @access public
-         * @param  array $headers
-         * @return void
+         * @access  public
+         * @param   array $headers
+         * @return  void
          */
         public function setHeaders(array $headers)
         {
@@ -788,9 +788,9 @@
          * 
          * Proxy for setMimes.
          * 
-         * @access public
-         * @param  string $mime
-         * @return void
+         * @access  public
+         * @param   string $mime
+         * @return  void
          */
         public function setMime($mime)
         {
@@ -802,12 +802,12 @@
          * 
          * Stores which mime types can be accepted in the request.
          * 
-         * @notes  if false specified (such as setMime(false) or
-         *         setMimes(false)), then no mimes are set as being allowed (eg.
-         *         good for clearing out any previously set acceptable
-         *         mime-types)
-         * @access public
-         * @return void
+         * @notes   if false specified (such as setMime(false) or
+         *          setMimes(false)), then no mimes are set as being allowed
+         *          (eg. good for clearing out any previously set acceptable
+         *          mime-types)
+         * @access  public
+         * @return  void
          */
         public function setMimes()
         {
@@ -823,8 +823,8 @@
          * 
          * Set path to file for curl to store cookies. File must be writable.
          * 
-         * @param  string $path
-         * @return void
+         * @param   string $path
+         * @return  void
          */
         public function setCookieStoragePath($path)
         {
@@ -838,10 +838,10 @@
          * to return the number of bytes written, otherwise the transfer will
          * fail.
          * 
-         * @access public
-         * @param  Object $resource
-         * @param  string $data
-         * @return integer
+         * @access  public
+         * @param   Object $resource
+         * @param   string $data
+         * @return  integer
          */
         public function writeCallback($resource, $data)
         {
