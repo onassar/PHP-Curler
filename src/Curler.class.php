@@ -207,7 +207,7 @@
          * @access  protected
          * @param   string $url
          * @param   boolean $head. (default: false) whether or not this is a HEAD
-         *         request, in which case no response-body is returned
+         *          request, in which case no response-body is returned
          * @return  Resource curl resource reference
          */
         protected function _getResource($url, $head = false)
@@ -802,7 +802,7 @@
          * 
          * Stores which mime types can be accepted in the request.
          * 
-         * @notes   if false specified (such as setMime(false) or
+         * @note    if false specified (such as setMime(false) or
          *          setMimes(false)), then no mimes are set as being allowed
          *          (eg. good for clearing out any previously set acceptable
          *          mime-types)
