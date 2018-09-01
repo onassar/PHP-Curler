@@ -69,10 +69,26 @@
         "images",
         "png"
     ],
+    "image/svg": [
+        "all",
+        "vector",
+        "vectors"
+    ],
+    "image/svg+xml": [
+        "all",
+        "vector",
+        "vectors"
+    ],
     "image/vnd.microsoft.icon": [
         "all",
         "image",
         "images"
+    ],
+    "image/webp": [
+        "all",
+        "image",
+        "images",
+        "webp"
     ],
     "image/x-icon": [
         "all",
