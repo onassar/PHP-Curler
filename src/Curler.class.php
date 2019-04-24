@@ -21,8 +21,8 @@
          * Array of acceptable mime types that ought to result in a successful
          * cURL request.
          * 
-         * @var     array (default: array())
          * @access  protected
+         * @var     array (default: array())
          */
         protected $_acceptableMimeTypes = array();
 
@@ -33,16 +33,16 @@
          * cookies that are sent back by a curl. This is only used to ensure
          * servers that require cookie saving to properly respond to a request.
          * 
-         * @var     false|string (default: false)
          * @access  protected
+         * @var     false|string (default: false)
          */
         protected $_cookieStoragePath = false;
 
         /**
          * _curlErrors
          * 
-         * @var     array (default: array())
          * @access  protected
+         * @var     array (default: array())
          */
         protected $_curlErrors = array();
 
@@ -52,8 +52,8 @@
          * Variable used to store content during a get request to ensure
          * filesize limits aren't reached.
          * 
-         * @var     string (default: '')
          * @access  protected
+         * @var     string (default: '')
          */
         protected $_dynamicResponse = '';
 
@@ -62,8 +62,8 @@
          * 
          * Array containing details of a possible error.
          * 
-         * @var     false|array (default: false)
          * @access  protected
+         * @var     false|array (default: false)
          */
         protected $_error = false;
 
@@ -72,16 +72,16 @@
          * 
          * Array containing the request headers that will be sent with the curl.
          * 
-         * @var     array (default: array())
          * @access  protected
+         * @var     array (default: array())
          */
         protected $_headers = array();
 
         /**
          * _headInfo
          * 
-         * @var     array
          * @access  protected
+         * @var     array
          */
         protected $_headInfo;
 
@@ -91,24 +91,24 @@
          * Storage of the info that was returned by the GET and HEAD calls
          * (since a GET is always preceeded by a HEAD).
          * 
-         * @var     array
          * @access  protected
+         * @var     array
          */
         protected $_info;
 
         /**
          * _mimes
          * 
-         * @var     array (default: array())
          * @access  protected
+         * @var     array (default: array())
          */
         protected $_mimes = array();
 
         /**
          * _options
          * 
-         * @var     array
          * @access  protected
+         * @var     array
          */
         protected $_options = array(
             'authCredentials' => array(),
@@ -123,8 +123,8 @@
         /**
          * _response
          * 
-         * @var     String
          * @access  protected
+         * @var     string
          */
         protected $_response;
 
@@ -133,8 +133,8 @@
          *
          * Array of curl options
          *
-         * @var     array
          * @access  protected
+         * @var     array
          */
         protected $_curlOptions = array();
 
@@ -206,7 +206,7 @@
          * 
          * @access  protected
          * @param   string $url
-         * @param   boolean $head. (default: false) whether or not this is a HEAD
+         * @param   bool $head. (default: false) whether or not this is a HEAD
          *          request, in which case no response-body is returned
          * @return  Resource curl resource reference
          */
@@ -688,7 +688,7 @@
          * @access  public
          * @param   string $url
          * @param   array $array
-         * @param   boolean $buildQuery (default: true)
+         * @param   bool $buildQuery (default: true)
          * @return  array|false
          */
         public function post($url, array $data = array(), $buildQuery = true)
@@ -841,7 +841,7 @@
          * @access  public
          * @param   Object $resource
          * @param   string $data
-         * @return  integer
+         * @return  int
          */
         public function writeCallback($resource, $data)
         {
