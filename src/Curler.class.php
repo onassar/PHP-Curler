@@ -130,9 +130,9 @@
 
         /**
          * _curlOptions
-         *
+         * 
          * Array of curl options
-         *
+         * 
          * @access  protected
          * @var     array
          */
@@ -740,7 +740,7 @@
 
         /**
          * setCurlOptions
-         *
+         * 
          * @access  public
          * @param   array $options
          * @return  void
