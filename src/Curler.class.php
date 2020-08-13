@@ -823,6 +823,7 @@
          * 
          * Set path to file for curl to store cookies. File must be writable.
          * 
+         * @access  public
          * @param   string $path
          * @return  void
          */
