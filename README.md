@@ -18,16 +18,10 @@ accessed through the **getInfo** method.
 ### Example Output of a URL
 
 ``` php
-<?php
-
-    // booting
-    require_once APP . '/vendors/PHP-Curler/src/Curler.class.php';
-    
-    // grab google.com contents and display
-    $curler = new Curler();
-    echo $curler->get('http://www.google.com/');
-    exit(0);
-
+require_once APP . '/vendors/PHP-Curler/src/Curler.class.php';
+$curler = new Curler();
+echo $curler->get('http://www.google.com/');
+exit(0);
 ```
 
 The above example, quite simply, downloads the google.com source, and displays
